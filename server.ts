@@ -3,7 +3,8 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
-const PORT = process.env.PORT || 3000;
+// Ensure PORT is treated as a number for Express binding
+const PORT = Number(process.env.PORT) || 3000;
 
 // Langkawi travel locations
 const LOCATIONS = [
@@ -259,7 +260,7 @@ Do not include any other text or introductory phrases.`,
     }
   });
 
-  // Vite middleware for development
+  // Vite middleware for development vs static build in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -274,8 +275,9 @@ Do not include any other text or introductory phrases.`,
     });
   }
 
+  // Ensure 0.0.0.0 host and numeric PORT for Render
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
